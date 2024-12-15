@@ -14,7 +14,6 @@ function App() {
     if (authStatus === "authenticated" && user?.signInDetails?.loginId) {
       // Add small delay to ensure auth is fully established
       setTimeout(() => {
-        // @ts-ignore
         sendLoginNotification(user.signInDetails.loginId).catch((error) =>
           console.error("Failed to send login notification:", error)
         );
