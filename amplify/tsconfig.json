@@ -9,9 +9,11 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
+      "@/*": ["./src/*"],
       "$amplify/*": [
         "../.amplify/generated/*"
       ]
     }
   }
 }
+
