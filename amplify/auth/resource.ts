@@ -4,22 +4,11 @@ export const auth = defineAuth({
   loginWith: {
     email: true,
   },
-  access: {
-    // @ts-ignore
-    authenticatedRole: {
-      iam: {
-        statements: [
-          {
-            effect: "Allow",
-            actions: [
-              "sns:Publish",
-              "sns:Subscribe",
-              "sns:ListSubscriptionsByTopic",
-            ],
-            resources: ["arn:aws:sns:us-east-1:911167894190:loginMessage"],
-          },
-        ],
-      },
-    },
-  },
+  access: (allow) => [
+    allow.resource({
+      service: "sns",
+      actions: ["Publish", "Subscribe", "ListSubscriptionsByTopic"],
+      resourceArn: "arn:aws:sns:us-east-1:911167894190:loginMessage",
+    }),
+  ],
 });
