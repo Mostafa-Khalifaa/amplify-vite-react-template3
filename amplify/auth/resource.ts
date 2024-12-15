@@ -5,6 +5,7 @@ export const auth = defineAuth({
     email: true,
   },
   access: {
+    // @ts-ignore
     authenticatedRole: {
       iam: {
         statements: [
