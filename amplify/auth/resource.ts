@@ -1,11 +1,21 @@
-import { defineAuth } from '@aws-amplify/backend';
+// amplify/auth/resource.ts
+import { defineAuth } from "@aws-amplify/backend";
 
-/**
- * Define and configure your auth resource
- * @see https://docs.amplify.aws/gen2/build-a-backend/auth
- */
 export const auth = defineAuth({
   loginWith: {
     email: true,
+  },
+  authenticatedRole: {
+    statements: [
+      {
+        effect: "Allow",
+        actions: [
+          "sns:Publish",
+          "sns:Subscribe",
+          "sns:ListSubscriptionsByTopic",
+        ],
+        resources: ["arn:aws:sns:us-east-1:911167894190:loginMessage"],
+      },
+    ],
   },
 });

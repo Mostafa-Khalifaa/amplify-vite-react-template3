@@ -2,12 +2,24 @@ import { useEffect, useState } from "react";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { sendLoginNotification } from "./utils/snsClient";
 
 const client = generateClient<Schema>();
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-      const { user, signOut } = useAuthenticator();
+  const { user, signOut, authStatus } = useAuthenticator();
+
+  useEffect(() => {
+    if (authStatus === "authenticated" && user?.signInDetails?.loginId) {
+      // Add small delay to ensure auth is fully established
+      setTimeout(() => {
+        sendLoginNotification(user.signInDetails.loginId).catch((error) =>
+          console.error("Failed to send login notification:", error)
+        );
+      }, 1000);
+    }
+  }, [authStatus, user]);
 
   useEffect(() => {
     client.models.Todo.observeQuery().subscribe({
@@ -18,7 +30,7 @@ function App() {
   function createTodo() {
     client.models.Todo.create({ content: window.prompt("Todo content") });
   }
-    
+
   function deleteTodo(id: string) {
     client.models.Todo.delete({ id });
   }
@@ -34,13 +46,7 @@ function App() {
           </li>
         ))}
       </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
+      <div>🥳 App successfully hosted. Try creating a new todo.</div>
       <button onClick={signOut}>Sign out</button>
     </main>
   );

@@ -6,6 +6,7 @@ import "./index.css";
 import "@aws-amplify/ui-react/styles.css";
 import { Amplify } from "aws-amplify";
 import outputs from "../amplify_outputs.json";
+import config from "./amplifyconfiguration.json";
 
 Amplify.configure(outputs);
 
